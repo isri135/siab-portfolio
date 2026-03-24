@@ -2,28 +2,52 @@ const videoProjects = [
   {
     title: "Fight Show Promo",
     category: "Event Videography",
-    description: "Promotional content for a fight show.",
+    description:
+      "Promotional content created to build hype and drive attention for a live boxing event.",
     src: "/videos/fight-show-promo.mp4",
+    poster: "/thumbnails/fight-show-promo.jpg",
+    instagramUrl: "https://www.instagram.com/reel/DP2OUsYDY29/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
     colorClass: "previewCard1",
     orientation: "vertical",
   },
   {
     title: "Restaurant Reel",
     category: "Food / Social Media",
-    description: "Restaurant content shot in cinematic horizontal format.",
+    description:
+      "Short-form visual content designed for social media marketing and brand presence.",
     src: "/videos/restaurant-reel.mp4",
+    poster: "/thumbnails/restaurant-reel.jpg",
+    instagramUrl: "https://www.instagram.com/reel/DWMO61LAM3I/?utm_source=ig_web_copy_link",
     colorClass: "previewCard2",
     orientation: "horizontal",
   },
   {
     title: "Podcast Clip",
     category: "Editing / Reels",
-    description: "Short-form podcast highlight clips.",
+    description:
+      "Edited short-form clips built for engagement, retention, and shareable storytelling.",
     src: "/videos/podcast-clip.mp4",
+    poster: "/thumbnails/podcast-clip.jpg",
+    instagramUrl: "https://www.instagram.com/reel/DMoD38xuHY-/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
     colorClass: "previewCard3",
     orientation: "vertical",
   },
 ];
+
+// const instagramPosts = [
+//   {
+//     title: "Fight Show Content",
+//     link: "https://www.instagram.com/reel/DP2OUsYDY29/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+//   },
+//   {
+//     title: "Restaurant Reel",
+//     link: "https://www.instagram.com/reel/DWMO61LAM3I/?utm_source=ig_web_copy_link",
+//   },
+//   {
+//     title: "Podcast Clip",
+//     link: "https://www.instagram.com/reel/DMoD38xuHY-/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+//   },
+// ];
 
 export default function HomePage() {
   return (
@@ -47,26 +71,28 @@ export default function HomePage() {
 
         <div className="heroActions">
           <a href="#work" className="btnPrimary">
-            See My Work
+            See Some Of My Work
           </a>
-          <a href="#contact" className="btnSecondary">
-            Contact
+          <a href="#instagram" className="btnSecondary">
+            Instagram (For More Work)
           </a>
         </div>
       </section>
 
       <section className="videoShowcase" id="work">
         {videoProjects.map((item) => (
-          <article
-            key={item.title}
-            className={`videoCard ${item.colorClass}`}
-          >
+          <article key={item.title} className={`videoCard ${item.colorClass}`}>
             <div className="videoFrame">
               <video
-                className="portfolioVideo"
+                className={`portfolioVideo ${
+                  item.orientation === "horizontal"
+                    ? "horizontalVideo"
+                    : "verticalVideo"
+                }`}
                 controls
                 preload="metadata"
                 playsInline
+                poster={item.poster}
               >
                 <source src={item.src} type="video/mp4" />
                 Your browser does not support the video tag.
@@ -77,6 +103,17 @@ export default function HomePage() {
               <p className="cardEyebrow">{item.category}</p>
               <h2>{item.title}</h2>
               <p>{item.description}</p>
+
+              <div className="videoLinks">
+                <a
+                  href={item.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btnPrimary"
+                >
+                  View on Instagram
+                </a>
+              </div>
             </div>
           </article>
         ))}
@@ -136,6 +173,45 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* <section className="contentSection" id="instagram">
+        <div className="sectionIntro">
+          <p className="sectionLabel">Instagram</p>
+          <h2>More Work Lives Here</h2>
+        </div>
+
+        <div className="instagramIntro softPanel">
+          <p>
+            Most of my latest videography work, reels, event coverage, and
+            editing projects are shared on Instagram. Visit my page to see more
+            of my recent content and exact featured videos.
+          </p>
+          <a
+            href="https://www.instagram.com/siab.__/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btnPrimary"
+          >
+            Visit My Instagram
+          </a>
+        </div>
+
+        <div className="instagramGrid">
+          {instagramPosts.map((post) => (
+            <a
+              key={post.title}
+              href={post.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="instagramCard"
+            >
+              <div className="instagramThumb">IG</div>
+              <h3>{post.title}</h3>
+              <p>Open this exact post on Instagram</p>
+            </a>
+          ))}
+        </div>
+      </section> */}
 
       <section className="contentSection" id="contact">
         <div className="sectionIntro">
