@@ -2,8 +2,9 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Israfil Bhagwandass | Videography Portfolio",
-  description: "Videography and editing portfolio built with Next.js",
+  title: "Israfil Bhagwandass | Videographer & Editor",
+  description:
+    "Videography and editing for events, brands, sports, and social media.",
 };
 
 export default function RootLayout({
@@ -13,20 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <header className="siteHeader">
-          <div className="siteHeaderInner">
-
-            <nav className="topNav">
-              <a href="#about">About</a>
-              <a href="#play">Services</a>
-              <a href="#contact">Contact</a>
-            </nav>
-          </div>
-        </header>
-
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
