@@ -6,7 +6,7 @@ const SETTINGS = {
   email: "hello@siabfilms.com",          // where enquiries go
   // Google Sheets: paste your Apps Script Web app URL (ends in /exec). See google-sheets/SETUP.md.
   // Leave "" to open the visitor's email app instead.
-  sheetEndpoint: "",
+  sheetEndpoint: "https://script.google.com/macros/s/AKfycbxStjyr_uaTQ0baSSreD_m0rPB-_PLRIp2Wj5B7ddcIXPSo1Uc5auoDibaOWQUfleL9/exec",
   calendlyUrl: "",                        // e.g. "https://calendly.com/siabfilms/15min"
   // Showreel button. Swap to your proper cut with music when ready (file or YouTube/Vimeo embed).
   showreel: { src: "videos/hero-loop.mp4", poster: "assets/thumbs/hero-poster.jpg", embed: "" },
