@@ -37,7 +37,7 @@ const WORK = [
   { id: "campaign-doc", title: "Fitz for Ward 5", client: "Political campaign", category: "documentary", format: "wide",
     desc: "A mixed-media short documentary on former world champion Fitz Vanderpool. Archive fight footage, collage animation and the community he's running to serve.",
     src: "videos/fitz-campaign-documentary.mp4", poster: "assets/thumbs/fitz-campaign.jpg" },
-  { id: "fight-teaser", title: "One Night", client: "The Whip Boxing Academy", category: "fight", format: "vertical",
+  { id: "fight-teaser", title: "One Night", client: "WHIP Boxing Academy & Gym", category: "fight", format: "vertical",
     desc: "Teaser for a fight show, cut to build anticipation and sell tickets.",
     src: "videos/fight-show-teaser.mp4", poster: "assets/thumbs/fight-show-teaser.jpg" },
   { id: "podcast-promo", title: "Fight Show Podcast Promo", client: "Fight show", category: "fight", format: "vertical",
