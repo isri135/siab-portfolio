@@ -386,6 +386,8 @@
         <label><span id="dateLabel">Shoot date / deadline</span><input name="date" type="text" id="dateInput" placeholder="e.g. Launching 14 March" /></label>
       </div>
       <label>Tell us about the project<textarea name="message" rows="5" required placeholder="What's it for, who's it for, and where will it go out?"></textarea></label>
+      <!-- Spam trap: hidden from people, bots fill it in -->
+      <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off" /></label>
       <button class="btn btn-block" type="submit">Send enquiry</button>
       <p class="form-note" id="formNote"></p>
     </form>

@@ -344,3 +344,5 @@ h4 { font-size: 1.1rem; font-weight: 700; }
   .type-toggle { grid-template-columns: 1fr 1fr; }
   .hero { padding-bottom: 60px; }
 }
+.form .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.btn:disabled { opacity: .6; cursor: wait; transform: none; }

@@ -35,7 +35,7 @@ A static site with no build step. Open `index.html` in a browser to preview it.
 
 ## Things to set in `main.js` → `SETTINGS`
 - `email`: your real email address
-- `formEndpoint`: a free [Formspree](https://formspree.io) URL, so enquiries arrive without the visitor's email app opening
+- `sheetEndpoint`: your Google Apps Script Web app URL, so enquiries land in a Google Sheet. Setup steps: `../google-sheets/SETUP.md`
 - `calendlyUrl`: optional, adds a "Book a 15-min call" button
 
 ## Things to edit in `index.html`

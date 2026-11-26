@@ -4,9 +4,9 @@
 
 const SETTINGS = {
   email: "hello@siabfilms.com",          // where enquiries go
-  // Free form backend: create a form at https://formspree.io and paste the URL,
-  // e.g. "https://formspree.io/f/abcdwxyz". Leave "" to open the visitor's email app instead.
-  formEndpoint: "",
+  // Google Sheets: paste your Apps Script Web app URL (ends in /exec). See google-sheets/SETUP.md.
+  // Leave "" to open the visitor's email app instead.
+  sheetEndpoint: "",
   calendlyUrl: "",                        // e.g. "https://calendly.com/siabfilms/15min"
   // Showreel button. Swap to your proper cut with music when ready (file or YouTube/Vimeo embed).
   showreel: { src: "videos/hero-loop.mp4", poster: "assets/thumbs/hero-poster.jpg", embed: "" },
@@ -229,13 +229,18 @@ form.addEventListener("submit", async e => {
   if (!ok) { note.textContent = "Please fill in your name, a valid email and a few words about the project."; return; }
   const fd = new FormData(form), data = {};
   for (const [k, v] of fd) if (v) data[k] = data[k] ? `${data[k]}, ${v}` : v;  // joins ticked checkboxes
-  if (SETTINGS.formEndpoint) {
-    note.textContent = "Sending…";
+  if (SETTINGS.sheetEndpoint) {
+    const btn = $('button[type="submit"]', form);
+    btn.disabled = true; note.textContent = "Sending…";
+    data.source = location.href;
     try {
-      const r = await fetch(SETTINGS.formEndpoint, { method: "POST", headers: { Accept: "application/json", "Content-Type": "application/json" }, body: JSON.stringify(data) });
-      if (!r.ok) throw 0;
+      // Sent as a plain form post so Google Apps Script can read it without a CORS preflight
+      const r = await fetch(SETTINGS.sheetEndpoint, { method: "POST", body: new URLSearchParams(data) });
+      const res = await r.json();
+      if (res.result !== "success") throw 0;
       form.reset(); syncTypeFields(); note.textContent = "Thanks! Your enquiry has been sent. We'll reply within 24 hours.";
     } catch { note.textContent = `Something went wrong. Please email ${SETTINGS.email} directly.`; }
+    btn.disabled = false;
   } else {
     const body = Object.entries(data).map(([k, v]) => `${k}: ${v}`).join("\n");
     location.href = `mailto:${SETTINGS.email}?subject=${encodeURIComponent(`New enquiry: ${data.type} (${data.name})`)}&body=${encodeURIComponent(body)}`;
