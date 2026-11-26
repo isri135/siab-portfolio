@@ -59,8 +59,9 @@ const WORK = [
     desc: "Smooth gimbal work in a high-end kitchen.", src: "", embed: "", poster: "" },
   { id: "dolly", title: "Dolly Zoom Study", client: "Camera work", category: "cinematic", format: "vertical", soon: true,
     desc: "A set of dolly zoom shots.", src: "", embed: "", poster: "" },
-  { id: "vlog", title: "Vlog Edit", client: "Creator", category: "vlog", format: "wide", soon: true,
-    desc: "A fast-paced vlog edit made to keep viewers watching.", src: "", embed: "", poster: "" }
+  { id: "vlog", title: "Trinidad Vlog", client: "Travel vlog", category: "vlog", format: "wide",
+    desc: "A fast-paced travel vlog from Trinidad: coastline, beaches and city nights, cut to keep viewers watching.",
+    src: "videos/vlog-1.mp4", poster: "assets/thumbs/vlog-1.jpg" }
 ];
 
 /* TESTIMONIALS: the section stays hidden until you add at least one real quote.
@@ -254,5 +255,5 @@ counters.forEach(c => countIO.observe(c));
 
 /* Reveal on scroll */
 const revealIO = new IntersectionObserver(entries => entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); revealIO.unobserve(en.target); } }), { threshold: .12 });
-$$(".section-head, .door, .card, .still, .svc, .steps li, .case-media, .case-body, .about-photo, .about-body, .faq-list, .form, .contact-intro, .reel-frame")
+$$(".section-head, .door, .card, .still, .svc, .bento-card, .steps li, .case-media, .case-body, .about-photo, .about-body, .faq-list, .form, .contact-intro, .reel-frame")
   .forEach(el => { el.classList.add("reveal"); revealIO.observe(el); });
