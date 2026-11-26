@@ -3,13 +3,11 @@
    ========================================================= */
 
 const SETTINGS = {
-  email: "hello@siabfilms.com",          // where enquiries go
+  email: "siabhagw@gmail.com",           // shown on the site and used if the form can't send
   // Google Sheets: paste your Apps Script Web app URL (ends in /exec). See google-sheets/SETUP.md.
   // Leave "" to open the visitor's email app instead.
   sheetEndpoint: "https://script.google.com/macros/s/AKfycbxStjyr_uaTQ0baSSreD_m0rPB-_PLRIp2Wj5B7ddcIXPSo1Uc5auoDibaOWQUfleL9/exec",
   calendlyUrl: "",                        // e.g. "https://calendly.com/siabfilms/15min"
-  // Showreel button. Swap to your proper cut with music when ready (file or YouTube/Vimeo embed).
-  showreel: { src: "videos/hero-loop.mp4", poster: "assets/thumbs/hero-poster.jpg", embed: "" },
   // Muted background loops: wide for desktop, vertical for phones
   hero: { wide: "videos/hero-loop.mp4", tall: "videos/hero-loop-vertical.mp4" }
 };
@@ -31,7 +29,7 @@ const CATEGORIES = [
    - src:    a local file, e.g. "videos/fight-night.mp4"   (also plays on hover)
    - embed:  OR a YouTube / Vimeo / Instagram-hosted URL
    - poster: a thumbnail image, e.g. "assets/thumbs/fight-night.jpg"
-   - soon:   true shows a "Coming soon" badge
+   - soon:   true hides it from the site until it has a video
    Order matters: put your strongest work first. */
 const WORK = [
   { id: "campaign-doc", title: "Fitz for Ward 5", client: "Political campaign", category: "documentary", format: "wide",
@@ -108,7 +106,8 @@ if (reduceMotion) heroVid.removeAttribute("autoplay");
 heroVid.addEventListener("error", () => heroVid.remove());
 heroVid.src = matchMedia("(orientation: portrait)").matches ? SETTINGS.hero.tall : SETTINGS.hero.wide;
 
-/* Work grid */
+/* Work grid (items marked soon: true stay hidden until they have a video) */
+const SHOWN = WORK.filter(w => !w.soon);
 const filmGrid = $("#filmGrid"), reelGrid = $("#reelGrid"), filters = $("#filters");
 const syncGroups = () => [["#filmGroup", filmGrid], ["#reelGroup", reelGrid]].forEach(([g, grid]) => {
   $(g).hidden = !$$(".card:not(.hide)", grid).length;
@@ -116,7 +115,7 @@ const syncGroups = () => [["#filmGroup", filmGrid], ["#reelGroup", reelGrid]].fo
 const gradients = ["linear-gradient(140deg,#2a0f0c,#101012 70%)", "linear-gradient(140deg,#231a0a,#0f0f11 70%)", "linear-gradient(140deg,#18181c,#2b0d0a)", "linear-gradient(200deg,#1d1508,#0d0d0f 65%)"];
 
 CATEGORIES.forEach((c, i) => {
-  if (c.key !== "all" && !WORK.some(w => w.category === c.key)) return;
+  if (c.key !== "all" && !SHOWN.some(w => w.category === c.key)) return;
   const b = document.createElement("button");
   b.className = "filter" + (i === 0 ? " active" : "");
   b.textContent = c.label; b.dataset.key = c.key; b.setAttribute("role", "tab");
@@ -129,7 +128,7 @@ CATEGORIES.forEach((c, i) => {
 });
 
 const catLabel = k => (CATEGORIES.find(c => c.key === k) || {}).label || k;
-WORK.forEach((w, i) => {
+SHOWN.forEach((w, i) => {
   const card = document.createElement("button");
   card.className = `card ${w.format === "vertical" ? "tall" : "wide"}`;
   card.dataset.cat = w.category;
@@ -173,7 +172,6 @@ $("#lbClose").onclick = closeLightbox;
 lb.addEventListener("click", e => { if (e.target === lb) closeLightbox(); });
 addEventListener("keydown", e => { if (e.key === "Escape" && !lb.hidden) closeLightbox(); });
 
-$("[data-open-reel]").onclick = () => openLightbox({ title: "SIABfilms Showreel", format: "wide", ...SETTINGS.showreel });
 $$("[data-work-id]").forEach(el => el.onclick = () => openLightbox(WORK.find(w => w.id === el.dataset.workId)));
 
 /* Stills gallery */
@@ -198,37 +196,13 @@ $("#emailLink").href = "mailto:" + SETTINGS.email; $("#emailLink").textContent =
 
 const form = $("#enquiryForm"), note = $("#formNote");
 
-// Project types: the date field's wording changes with the type
-const TYPES = {
-  brand:      { value: "Brand Film",     dateLabel: "Shoot date / deadline", datePh: "e.g. Launching 14 March" },
-  commercial: { value: "Commercial",     dateLabel: "When should it go live?", datePh: "e.g. Campaign starts 1 April" },
-  event:      { value: "Event",          dateLabel: "Event date",            datePh: "e.g. Fight night 14 March" },
-  other:      { value: "Something else", dateLabel: "Shoot date / deadline", datePh: "e.g. End of March" }
-};
-
-// Show only the questions for the chosen type. Hidden groups are disabled so they aren't sent.
-function syncTypeFields() {
-  const type = $('input[name="type"]:checked', form).value;
-  $$(".type-fields", form).forEach(fs => { const on = fs.dataset.for === type; fs.hidden = !on; fs.disabled = !on; });
-  const t = Object.values(TYPES).find(t => t.value === type) || TYPES.other;
-  $("#dateLabel").textContent = t.dateLabel; $("#dateInput").placeholder = t.datePh;
-}
-$$('input[name="type"]', form).forEach(r => r.addEventListener("change", syncTypeFields));
-syncTypeFields();
-
-// "Inquire" buttons pre-select the project type
-$$("[data-type]").forEach(a => a.addEventListener("click", () => {
-  const t = TYPES[a.dataset.type]; if (!t) return;
-  const radio = $(`input[name="type"][value="${t.value}"]`, form); if (radio) { radio.checked = true; syncTypeFields(); }
-}));
-
 form.addEventListener("submit", async e => {
   e.preventDefault();
   let ok = true;
   $$("[required]", form).forEach(f => { const bad = !f.value.trim() || (f.type === "email" && !/^\S+@\S+\.\S+$/.test(f.value)); f.classList.toggle("invalid", bad); if (bad) ok = false; });
-  if (!ok) { note.textContent = "Please fill in your name, a valid email and a few words about the project."; return; }
+  if (!ok) { note.textContent = "Please fill in your name, a valid email and a few words about what you need."; return; }
   const fd = new FormData(form), data = {};
-  for (const [k, v] of fd) if (v) data[k] = data[k] ? `${data[k]}, ${v}` : v;  // joins ticked checkboxes
+  for (const [k, v] of fd) if (v) data[k] = v;
   if (SETTINGS.sheetEndpoint) {
     const btn = $('button[type="submit"]', form);
     btn.disabled = true; note.textContent = "Sending…";
@@ -238,27 +212,17 @@ form.addEventListener("submit", async e => {
       const r = await fetch(SETTINGS.sheetEndpoint, { method: "POST", body: new URLSearchParams(data) });
       const res = await r.json();
       if (res.result !== "success") throw 0;
-      form.reset(); syncTypeFields(); note.textContent = "Thanks! Your enquiry has been sent. We'll reply within 24 hours.";
+      form.reset(); note.textContent = "Thanks! Your message has been sent. I'll reply within 24 hours.";
     } catch { note.textContent = `Something went wrong. Please email ${SETTINGS.email} directly.`; }
     btn.disabled = false;
   } else {
     const body = Object.entries(data).map(([k, v]) => `${k}: ${v}`).join("\n");
-    location.href = `mailto:${SETTINGS.email}?subject=${encodeURIComponent(`New enquiry: ${data.type} (${data.name})`)}&body=${encodeURIComponent(body)}`;
+    location.href = `mailto:${SETTINGS.email}?subject=${encodeURIComponent(`New enquiry from ${data.name}`)}&body=${encodeURIComponent(body)}`;
     note.textContent = "Opening your email app…";
   }
 });
 
-/* Count-up stats */
-const counters = $$("[data-count]");
-const countIO = new IntersectionObserver(entries => entries.forEach(en => {
-  if (!en.isIntersecting) return;
-  const el = en.target, end = +el.dataset.count, t0 = performance.now();
-  const step = t => { const p = Math.min((t - t0) / 1400, 1); el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); };
-  requestAnimationFrame(step); countIO.unobserve(el);
-}), { threshold: .5 });
-counters.forEach(c => countIO.observe(c));
-
 /* Reveal on scroll */
 const revealIO = new IntersectionObserver(entries => entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); revealIO.unobserve(en.target); } }), { threshold: .12 });
-$$(".section-head, .door, .card, .still, .svc, .bento-card, .steps li, .case-media, .case-body, .about-photo, .about-body, .faq-list, .form, .contact-intro, .reel-frame")
+$$(".section-head, .card, .still, .case-media, .case-body, .about-photo, .about-body, .form, .contact-intro")
   .forEach(el => { el.classList.add("reveal"); revealIO.observe(el); });

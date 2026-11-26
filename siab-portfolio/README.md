@@ -34,16 +34,16 @@ A static site with no build step. Open `index.html` in a browser to preview it.
 | `assets/og.jpg` | 1200×630 image used for link previews |
 
 ## Things to set in `main.js` → `SETTINGS`
-- `email`: your real email address
+- `email`: shown on the site, and used if the form can't send
 - `sheetEndpoint`: your Google Apps Script Web app URL, so enquiries land in a Google Sheet. Setup steps: `../google-sheets/SETUP.md`
 - `calendlyUrl`: optional, adds a "Book a 15-min call" button
 
-## Things to edit in `index.html`
-- The stats strip (use real numbers only)
-- Services cards (Brand Films, Commercials, Events) in the `#services` section; each "Inquire" button pre-selects that type in the form
-- Type-specific form questions live in the `<fieldset class="type-fields">` blocks; date label wording is in `TYPES` in `main.js`
-- Budget ranges in the form, plus the currency
-- About text, the "[your area]" line in the FAQ, and your social handles
+## How the page is laid out
+Hero → client names → Work → case study → Stills → About → Contact. The site does two jobs: show the work and make it easy to get in touch.
+
+- Work items with `soon: true` are hidden until you give them a video.
+- Add `assets/portrait.jpg` and the About section will show it. Without a photo, the About text spans the full width.
+- Contact links (email, Instagram, X) are in the `#contact` section of `index.html`.
 
 ## Hosting (free)
 Drag the folder into [Netlify Drop](https://app.netlify.com/drop), or push it to GitHub and connect it to Netlify, Vercel or Cloudflare Pages. Then point your domain at it.
